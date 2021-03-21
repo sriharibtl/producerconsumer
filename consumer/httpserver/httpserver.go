@@ -2,6 +2,7 @@ package httpserver
 
 import (
 	"errors"
+	kafka "kafka"
 	"log"
 	"net/http"
 	"strconv"
@@ -37,11 +38,9 @@ func (c *controller) Routes() []Route {
 	}
 }
 
-var GetCounter func() int
-
 func (c *controller) getHandler(resp http.ResponseWriter, req *http.Request) {
 	log.Println("Received request")
-	resp.Write([]byte(strconv.Itoa(GetCounter())))
+	resp.Write([]byte(strconv.Itoa(kafka.GetCounter())))
 }
 
 //StartHttpServer -Start Http server using the router

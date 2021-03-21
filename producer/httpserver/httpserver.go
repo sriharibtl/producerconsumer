@@ -1,10 +1,12 @@
 package httpserver
 
 import (
+	"context"
 	"errors"
 	"log"
 	"net/http"
-	"strconv"
+
+	kafka "kafka"
 
 	"github.com/gorilla/mux"
 )
@@ -37,13 +39,10 @@ func (c *controller) Routes() []Route {
 	}
 }
 
-var IncrementHandler func()
-var GetCounter func() int
-
 func (c *controller) getHandler(resp http.ResponseWriter, req *http.Request) {
 	log.Println("Received request")
-	IncrementHandler()
-	resp.Write([]byte(strconv.Itoa(GetCounter())))
+	kafka.Produce(context.Background())
+	resp.Write([]byte("Message written to kafka"))
 }
 
 //StartHttpServer -Start Http server using the router

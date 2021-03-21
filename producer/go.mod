@@ -5,8 +5,10 @@ go 1.15
 require (
     github.com/gorilla/mux v1.8.0
     httpserver v0.0.0
+    kafka v0.0.0
 )
 
 replace (
     httpserver v0.0.0 => ./httpserver
+    kafka v0.0.0 => ./kafka
 )

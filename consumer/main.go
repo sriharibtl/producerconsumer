@@ -1,7 +1,9 @@
 package main
 
 import (
+	"context"
 	"httpserver"
+	"kafka"
 )
 
 const (
@@ -11,10 +13,6 @@ const (
 var counter = 10
 
 func main() {
-
-	httpserver.GetCounter = func() int {
-		return counter
-	}
-
+	go kafka.Consume(context.Background())
 	panic(httpserver.StartHttpServer(ip))
 }
