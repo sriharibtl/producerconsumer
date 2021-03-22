@@ -41,8 +41,11 @@ func (c *controller) Routes() []Route {
 
 func (c *controller) getHandler(resp http.ResponseWriter, req *http.Request) {
 	log.Println("Received request")
-	kafka.Produce(context.Background())
-	resp.Write([]byte("Message written to kafka"))
+	if !kafka.ProducerStarted {
+		go kafka.Produce(context.Background())
+		kafka.ProducerStarted = true
+	}
+	resp.Write([]byte("Producer started"))
 }
 
 //StartHttpServer -Start Http server using the router
