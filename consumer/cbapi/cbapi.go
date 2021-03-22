@@ -1,6 +1,7 @@
 package cbapi
 
 import (
+	"errors"
 	"time"
 
 	"github.com/couchbase/gocb/v2"
@@ -13,6 +14,10 @@ const (
 
 var coll *gocb.Collection
 
+type Doc struct {
+	Counter int `json:"counter"`
+}
+
 func InitDB() error {
 	opts := gocb.ClusterOptions{Username: "Administrator", Password: "password"}
 	Cluster, err := gocb.Connect("172.16.8.38", opts)
@@ -24,6 +29,14 @@ func InitDB() error {
 		return err
 	}
 	coll = bucket.DefaultCollection()
+	_, err = coll.Insert(KEY, &Doc{Counter: 0}, &gocb.InsertOptions{Timeout: time.Second * 5})
+	if err != nil {
+		if errors.Is(err, gocb.ErrDocumentExists) {
+			return nil
+		} else {
+			return err
+		}
+	}
 	return nil
 }
 
