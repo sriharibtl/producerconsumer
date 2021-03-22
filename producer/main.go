@@ -1,8 +1,8 @@
 package main
 
 import (
+	"context"
 	"errors"
-	"httpserver"
 	"kafka"
 	"os"
 )
@@ -35,5 +35,5 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	panic(httpserver.StartHttpServer(ip))
+	kafka.Produce(context.Background())
 }
