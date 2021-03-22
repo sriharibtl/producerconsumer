@@ -1,8 +1,8 @@
 package httpserver
 
 import (
+	db "cbapi"
 	"errors"
-	kafka "kafka"
 	"log"
 	"net/http"
 	"strconv"
@@ -40,7 +40,14 @@ func (c *controller) Routes() []Route {
 
 func (c *controller) getHandler(resp http.ResponseWriter, req *http.Request) {
 	log.Println("Received request")
-	resp.Write([]byte(strconv.Itoa(kafka.GetCounter())))
+	dbconnection := &db.DBConnection{}
+	counter, err := dbconnection.FetchCounter()
+	if err != nil {
+		log.Println("Error fetching counter from DB:", err)
+		resp.WriteHeader(http.StatusInternalServerError)
+	} else {
+		resp.Write([]byte(strconv.Itoa(counter)))
+	}
 }
 
 //StartHttpServer -Start Http server using the router

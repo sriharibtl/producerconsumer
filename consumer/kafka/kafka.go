@@ -3,6 +3,9 @@ package kafka
 import (
 	"context"
 	"fmt"
+	"log"
+
+	db "cbapi"
 
 	kafka "github.com/segmentio/kafka-go"
 )
@@ -12,11 +15,7 @@ const (
 	broker1Address = "172.16.8.115:9092"
 )
 
-var data = "kafka!"
-
 var r *kafka.Reader
-
-var counter = 0
 
 func Consume(ctx context.Context) {
 	// initialize a new reader with the brokers and topic
@@ -29,6 +28,7 @@ func Consume(ctx context.Context) {
 			GroupID: "my-group",
 		})
 	}
+	dbConnection := &db.DBConnection{}
 
 	// the `ReadMessage` method blocks until we receive the next event
 	for {
@@ -38,11 +38,10 @@ func Consume(ctx context.Context) {
 		}
 		// after receiving the message, log its value
 		fmt.Println("received: ", string(msg.Value))
-		counter++
+		err = dbConnection.UpdateCounter()
+		if err != nil {
+			log.Println("Error updating counter in db:", err)
+		}
 	}
 
-}
-
-func GetCounter() int {
-	return counter
 }
