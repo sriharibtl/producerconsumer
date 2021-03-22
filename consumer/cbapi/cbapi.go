@@ -12,7 +12,10 @@ const (
 	SUBDOC = "counter"
 )
 
-var coll *gocb.Collection
+var (
+	coll  *gocb.Collection
+	DB_IP string
+)
 
 type Doc struct {
 	Counter int `json:"counter"`
@@ -20,7 +23,7 @@ type Doc struct {
 
 func InitDB() error {
 	opts := gocb.ClusterOptions{Username: "Administrator", Password: "password"}
-	Cluster, err := gocb.Connect("172.16.8.38", opts)
+	Cluster, err := gocb.Connect(DB_IP, opts)
 	if err != nil {
 		return err
 	}

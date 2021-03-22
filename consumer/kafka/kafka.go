@@ -11,11 +11,15 @@ import (
 )
 
 const (
-	topic          = "parking"
-	broker1Address = "172.16.8.115:9092"
+// topic = "parking"
+// broker1Address = "172.16.8.115:9092"
 )
 
-var r *kafka.Reader
+var (
+	r         *kafka.Reader
+	KafkaHost string
+	Topic     string
+)
 
 func Consume(ctx context.Context) {
 	// initialize a new reader with the brokers and topic
@@ -23,8 +27,8 @@ func Consume(ctx context.Context) {
 	// it from receiving duplicate messages
 	if r == nil {
 		r = kafka.NewReader(kafka.ReaderConfig{
-			Brokers: []string{broker1Address},
-			Topic:   topic,
+			Brokers: []string{KafkaHost},
+			Topic:   Topic,
 			GroupID: "my-group",
 		})
 	}
