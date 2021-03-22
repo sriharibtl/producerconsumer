@@ -1,6 +1,7 @@
 package main
 
 import (
+	"cbapi"
 	"context"
 	"httpserver"
 	"kafka"
@@ -13,6 +14,10 @@ const (
 var counter = 10
 
 func main() {
+	err := cbapi.InitDB()
+	if err != nil {
+		panic(err)
+	}
 	go kafka.Consume(context.Background())
 	panic(httpserver.StartHttpServer(ip))
 }
